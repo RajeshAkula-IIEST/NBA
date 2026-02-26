@@ -212,6 +212,9 @@ button{
 
 <script>
 
+const BACKEND_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+const form = document.getElementById("moocForm");
 const statusSelect = document.getElementById("statusSelect");
 const completedSection = document.getElementById("completedSection");
 const currentSection = document.getElementById("currentSection");
@@ -273,6 +276,116 @@ row.innerHTML = `
 </select>
 </td>
 `;
+}
+
+/*************************************************
+ * SUBMIT HANDLER
+ *************************************************/
+
+form.addEventListener("submit", async function(e){
+e.preventDefault();
+
+submitBtn.innerText = "Submitting...";
+submitBtn.disabled = true;
+
+const studentName = form.querySelectorAll("input")[0].value;
+const rollNumber = form.querySelectorAll("input")[1].value;
+const batch = form.querySelector("select").value;
+const status = statusSelect.value;
+
+let courses = [];
+
+if(status === "completed"){
+const rows = document.querySelectorAll("#completedTable tbody tr");
+
+for(const row of rows){
+const inputs = row.querySelectorAll("input");
+const selects = row.querySelectorAll("select");
+
+let certificateData = null;
+
+if(inputs[3].files[0]){
+const file = inputs[3].files[0];
+const base64 = await toBase64(file);
+
+certificateData = {
+filename: file.name,
+data: base64.split(",")[1]
+};
+}
+
+courses.push({
+courseId: inputs[0].value,
+courseName: inputs[1].value,
+platform: selects[0].value,
+marks: inputs[2].value,
+certificate: certificateData
+});
+}
+}
+
+if(status === "current"){
+const rows = document.querySelectorAll("#currentTable tbody tr");
+
+for(const row of rows){
+const inputs = row.querySelectorAll("input");
+const selects = row.querySelectorAll("select");
+
+courses.push({
+courseId: inputs[0].value,
+courseName: inputs[1].value,
+platform: selects[0].value
+});
+}
+}
+
+const payload = {
+studentName,
+rollNumber,
+batch,
+status,
+courses
+};
+
+try{
+const response = await fetch(BACKEND_URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify(payload)
+});
+
+const result = await response.json();
+
+if(result.status==="success"){
+alert("Data submitted successfully.");
+form.reset();
+location.reload();
+}else{
+alert("Error: " + result.message);
+}
+
+}catch(err){
+alert("Submission failed.");
+console.error(err);
+}
+
+submitBtn.innerText = "Submit";
+submitBtn.disabled = false;
+
+});
+
+/*************************************************
+ * FILE → BASE64
+ *************************************************/
+function toBase64(file){
+return new Promise((resolve, reject)=>{
+const reader = new FileReader();
+reader.readAsDataURL(file);
+reader.onload = ()=>resolve(reader.result);
+reader.onerror = error=>reject(error);
+});
 }
 
 </script>
