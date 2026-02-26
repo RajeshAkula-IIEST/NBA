@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MOOCs Data Collection | NBA Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg1:#0f2027;
+  --bg2:#203a43;
+  --bg3:#2c5364;
+  --card:#ffffff;
+  --primary:#1565c0;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+
+.container{
+  width:100%;
+  max-width:700px;
+}
+
+.card{
+  background:var(--card);
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  color:#222;
+}
+
+label{
+  font-weight:600;
+  display:block;
+  margin-top:15px;
+}
+
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+small{
+  color:#555;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  font-size:13px;
+}
+
+th, td{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
+
+th{
+  background:#f5f5f5;
+}
+
+button{
+  margin-top:15px;
+  padding:10px 15px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.add-btn{
+  background:#388e3c;
+  color:white;
+}
+
+.submit-btn{
+  background:var(--primary);
+  color:white;
+  width:100%;
+  display:none;
+}
+
+.hidden{
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+
+<h2>MOOCs Certification Details</h2>
+
+<form id="moocForm">
+
+<label>Student Name</label>
+<input type="text" required>
+
+<label>Roll Number</label>
+<input type="text" required>
+
+<label>Batch</label>
+<select required>
+  <option value="">Select Year</option>
+  <option>Fourth Year</option>
+  <option>Third Year</option>
+  <option>Second Year</option>
+  <option>First Year</option>
+</select>
+
+<label>Status of MOOCs Certification</label>
+<small>(Courses appeared in SWAYAM/NPTEL, etc. platforms)</small>
+<select id="statusSelect" required>
+  <option value="">Select Status</option>
+  <option value="completed">Completed at least one course</option>
+  <option value="current">Currently taking</option>
+  <option value="never">Never taken</option>
+</select>
+
+<!-- COMPLETED TABLE -->
+<div id="completedSection" class="hidden">
+
+<table id="completedTable">
+<thead>
+<tr>
+<th>Course ID</th>
+<th>Course Name</th>
+<th>Platform</th>
+<th>Marks</th>
+<th>Certificate (PDF)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input type="text"></td>
+<td><input type="text"></td>
+<td>
+<select>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+<td><input type="number"></td>
+<td><input type="file" accept="application/pdf"></td>
+</tr>
+</tbody>
+</table>
+
+<button type="button" class="add-btn" onclick="addCompletedRow()">+ Add More</button>
+
+</div>
+
+<!-- CURRENTLY TAKING TABLE -->
+<div id="currentSection" class="hidden">
+
+<table id="currentTable">
+<thead>
+<tr>
+<th>Course ID</th>
+<th>Course Name</th>
+<th>Platform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input type="text"></td>
+<td><input type="text"></td>
+<td>
+<select>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+
+<button type="button" class="add-btn" onclick="addCurrentRow()">+ Add More</button>
+
+</div>
+
+<button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+
+</form>
+
+</div>
+</div>
+
+<script>
+
+const statusSelect = document.getElementById("statusSelect");
+const completedSection = document.getElementById("completedSection");
+const currentSection = document.getElementById("currentSection");
+const submitBtn = document.getElementById("submitBtn");
+
+statusSelect.addEventListener("change", function(){
+
+completedSection.classList.add("hidden");
+currentSection.classList.add("hidden");
+submitBtn.style.display="none";
+
+if(this.value==="completed"){
+completedSection.classList.remove("hidden");
+submitBtn.style.display="block";
+}
+
+if(this.value==="current"){
+currentSection.classList.remove("hidden");
+submitBtn.style.display="block";
+}
+
+if(this.value==="never"){
+submitBtn.style.display="block";
+}
+
+});
+
+function addCompletedRow(){
+const table = document.getElementById("completedTable").getElementsByTagName('tbody')[0];
+const row = table.insertRow();
+
+row.innerHTML = `
+<td><input type="text"></td>
+<td><input type="text"></td>
+<td>
+<select>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+<td><input type="number"></td>
+<td><input type="file" accept="application/pdf"></td>
+`;
+}
+
+function addCurrentRow(){
+const table = document.getElementById("currentTable").getElementsByTagName('tbody')[0];
+const row = table.insertRow();
+
+row.innerHTML = `
+<td><input type="text"></td>
+<td><input type="text"></td>
+<td>
+<select>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+`;
+}
+
+</script>
+
+</body>
+</html>
