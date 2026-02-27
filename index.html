@@ -235,23 +235,42 @@ const statusSelect = document.getElementById("statusSelect");
 /* SHOW / HIDE SECTIONS */
 statusSelect.addEventListener("change", function(){
 
-document.getElementById("completedSection").classList.add("hidden");
-document.getElementById("currentSection").classList.add("hidden");
-submitBtn.style.display="none";
+  const completedSection = document.getElementById("completedSection");
+  const currentSection = document.getElementById("currentSection");
 
-if(this.value==="completed"){
-document.getElementById("completedSection").classList.remove("hidden");
-submitBtn.style.display="block";
-}
+  // Hide all sections
+  completedSection.classList.add("hidden");
+  currentSection.classList.add("hidden");
+  submitBtn.style.display="none";
 
-if(this.value==="current"){
-document.getElementById("currentSection").classList.remove("hidden");
-submitBtn.style.display="block";
-}
+  // Remove required from all hidden inputs
+  document.querySelectorAll("#completedSection input, #completedSection select")
+    .forEach(el => el.removeAttribute("required"));
 
-if(this.value==="never"){
-submitBtn.style.display="block";
-}
+  document.querySelectorAll("#currentSection input, #currentSection select")
+    .forEach(el => el.removeAttribute("required"));
+
+  if(this.value==="completed"){
+    completedSection.classList.remove("hidden");
+    submitBtn.style.display="block";
+
+    // Add required only to completed section
+    document.querySelectorAll("#completedSection input[type='text'], #completedSection input[type='number'], #completedSection select")
+      .forEach(el => el.setAttribute("required", "true"));
+  }
+
+  if(this.value==="current"){
+    currentSection.classList.remove("hidden");
+    submitBtn.style.display="block";
+
+    // Add required only to current section
+    document.querySelectorAll("#currentSection input[type='text'], #currentSection select")
+      .forEach(el => el.setAttribute("required", "true"));
+  }
+
+  if(this.value==="never"){
+    submitBtn.style.display="block";
+  }
 
 });
 
