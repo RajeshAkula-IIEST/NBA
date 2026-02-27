@@ -156,6 +156,7 @@ button:disabled{
 <th>Platform</th>
 <th>Marks</th>
 <th>Certificate (Optional)</th>
+  <th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -172,6 +173,11 @@ button:disabled{
 </td>
 <td><input type="number" required></td>
 <td><input type="file" accept="application/pdf"></td>
+<td>
+<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
+Delete
+</button>
+</td>
 </tr>
 </tbody>
 </table>
@@ -189,6 +195,7 @@ button:disabled{
 <th>Course ID</th>
 <th>Course Name</th>
 <th>Platform</th>
+  <th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -202,6 +209,13 @@ button:disabled{
 <option>NPTEL</option>
 <option>Other</option>
 </select>
+</td>
+<td><input type="number" required></td>
+<td><input type="file" accept="application/pdf"></td>
+<td>
+<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
+Delete
+</button>
 </td>
 </tr>
 </tbody>
@@ -291,6 +305,11 @@ row.innerHTML = `
 </td>
 <td><input type="number" required></td>
 <td><input type="file" accept="application/pdf"></td>
+<td>
+<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
+Delete
+</button>
+</td>
 `;
 }
 
@@ -308,9 +327,24 @@ row.innerHTML = `
 <option>Other</option>
 </select>
 </td>
+<td>
+<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
+Delete
+</button>
+</td>
 `;
 }
+function deleteRow(button){
+const row = button.closest("tr");
+const tbody = row.parentElement;
 
+if(tbody.rows.length === 1){
+alert("At least one course row must remain.");
+return;
+}
+
+row.remove();
+}
 /* FILE TO BASE64 */
 function toBase64(file){
 return new Promise((resolve,reject)=>{
