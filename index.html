@@ -110,6 +110,53 @@ button:disabled{
 }
 
 .hidden{display:none;}
+  /* -------------------------------
+   RESPONSIVE DESIGN
+--------------------------------*/
+
+@media (max-width: 768px){
+
+  body{
+    padding:12px;
+  }
+
+  .card{
+    padding:20px 18px;
+  }
+
+  h1{
+    font-size:18px;
+  }
+
+  h2{
+    font-size:13px;
+  }
+
+  table{
+    font-size:12px;
+  }
+
+  th, td{
+    padding:5px;
+  }
+
+  input, select{
+    font-size:13px;
+    padding:8px 10px;
+  }
+
+  .add-btn,
+  .submit-btn{
+    font-size:14px;
+    padding:10px;
+  }
+
+}
+
+/* Allow horizontal scroll on small screens */
+.table-wrapper{
+  overflow-x:auto;
+}
 </style>
 </head>
 
@@ -148,6 +195,7 @@ button:disabled{
 
 <!-- COMPLETED SECTION -->
 <div id="completedSection" class="hidden">
+<div class="table-wrapper">
 <table id="completedTable">
 <thead>
 <tr>
@@ -181,7 +229,7 @@ Delete
 </tr>
 </tbody>
 </table>
-
+</div>
 <button type="button" class="add-btn" onclick="addCompletedRow()">
 + Add More Course
 </button>
@@ -189,6 +237,7 @@ Delete
 
 <!-- CURRENT SECTION -->
 <div id="currentSection" class="hidden">
+  <div class="table-wrapper">
 <table id="currentTable">
 <thead>
 <tr>
@@ -220,7 +269,7 @@ Delete
 </tr>
 </tbody>
 </table>
-
+</div>
 <button type="button" class="add-btn" onclick="addCurrentRow()">
 + Add More Course
 </button>
