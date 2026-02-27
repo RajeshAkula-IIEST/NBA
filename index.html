@@ -34,25 +34,10 @@ body{
   to{opacity:1;transform:translateY(0);}
 }
 
-h1{
-  text-align:center;
-  color:#203a43;
-  font-size:20px;
-  margin-bottom:6px;
-}
+h1{text-align:center;color:#203a43;font-size:20px;margin-bottom:6px;}
+h2{text-align:center;color:#555;font-size:14px;margin-bottom:22px;}
 
-h2{
-  text-align:center;
-  color:#555;
-  font-size:14px;
-  margin-bottom:22px;
-}
-
-label{
-  font-weight:600;
-  margin-top:14px;
-  display:block;
-}
+label{font-weight:600;margin-top:14px;display:block;}
 
 input, select{
   width:100%;
@@ -63,10 +48,7 @@ input, select{
   font-size:14px;
 }
 
-small{
-  color:#666;
-  font-size:12px;
-}
+small{color:#666;font-size:12px;}
 
 table{
   width:100%;
@@ -127,9 +109,7 @@ button:disabled{
   color:#7a8a93;
 }
 
-.hidden{
-  display:none;
-}
+.hidden{display:none;}
 </style>
 </head>
 
@@ -143,13 +123,13 @@ button:disabled{
 <form id="moocForm">
 
 <label>Student Name</label>
-<input type="text" required>
+<input type="text" id="studentName" required>
 
 <label>Roll Number</label>
-<input type="text" required>
+<input type="text" id="rollNumber" required>
 
 <label>Batch</label>
-<select required>
+<select id="batch" required>
   <option value="">Select Year</option>
   <option>Fourth Year</option>
   <option>Third Year</option>
@@ -166,6 +146,7 @@ button:disabled{
   <option value="never">Never taken</option>
 </select>
 
+<!-- COMPLETED SECTION -->
 <div id="completedSection" class="hidden">
 <table id="completedTable">
 <thead>
@@ -174,21 +155,22 @@ button:disabled{
 <th>Course Name</th>
 <th>Platform</th>
 <th>Marks</th>
-<th>Certificate</th>
+<th>Certificate (Optional)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><input type="text"></td>
-<td><input type="text"></td>
+<td><input type="text" required></td>
+<td><input type="text" required></td>
 <td>
-<select>
+<select required>
+<option value="">Select</option>
 <option>SWAYAM</option>
 <option>NPTEL</option>
 <option>Other</option>
 </select>
 </td>
-<td><input type="number"></td>
+<td><input type="number" required></td>
 <td><input type="file" accept="application/pdf"></td>
 </tr>
 </tbody>
@@ -199,6 +181,7 @@ button:disabled{
 </button>
 </div>
 
+<!-- CURRENT SECTION -->
 <div id="currentSection" class="hidden">
 <table id="currentTable">
 <thead>
@@ -210,10 +193,11 @@ button:disabled{
 </thead>
 <tbody>
 <tr>
-<td><input type="text"></td>
-<td><input type="text"></td>
+<td><input type="text" required></td>
+<td><input type="text" required></td>
 <td>
-<select>
+<select required>
+<option value="">Select</option>
 <option>SWAYAM</option>
 <option>NPTEL</option>
 <option>Other</option>
@@ -242,7 +226,178 @@ Submit Details
 </div>
 
 <script>
-/* Keep ALL your existing JS exactly the same below */
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbx-kImOTQXTbkRqYVo6w2a5lEBFX_NnqGHcZS7064AxroIvKklYPrVI_dhrmumD-RwW/exec";
+
+const form = document.getElementById("moocForm");
+const submitBtn = document.getElementById("submitBtn");
+const statusSelect = document.getElementById("statusSelect");
+
+/* SHOW / HIDE SECTIONS */
+statusSelect.addEventListener("change", function(){
+
+document.getElementById("completedSection").classList.add("hidden");
+document.getElementById("currentSection").classList.add("hidden");
+submitBtn.style.display="none";
+
+if(this.value==="completed"){
+document.getElementById("completedSection").classList.remove("hidden");
+submitBtn.style.display="block";
+}
+
+if(this.value==="current"){
+document.getElementById("currentSection").classList.remove("hidden");
+submitBtn.style.display="block";
+}
+
+if(this.value==="never"){
+submitBtn.style.display="block";
+}
+
+});
+
+/* ADD ROWS */
+function addCompletedRow(){
+const table = document.querySelector("#completedTable tbody");
+const row = table.insertRow();
+row.innerHTML = `
+<td><input type="text" required></td>
+<td><input type="text" required></td>
+<td>
+<select required>
+<option value="">Select</option>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+<td><input type="number" required></td>
+<td><input type="file" accept="application/pdf"></td>
+`;
+}
+
+function addCurrentRow(){
+const table = document.querySelector("#currentTable tbody");
+const row = table.insertRow();
+row.innerHTML = `
+<td><input type="text" required></td>
+<td><input type="text" required></td>
+<td>
+<select required>
+<option value="">Select</option>
+<option>SWAYAM</option>
+<option>NPTEL</option>
+<option>Other</option>
+</select>
+</td>
+`;
+}
+
+/* FILE TO BASE64 */
+function toBase64(file){
+return new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.readAsDataURL(file);
+reader.onload=()=>resolve(reader.result);
+reader.onerror=error=>reject(error);
+});
+}
+
+/* SUBMIT */
+form.addEventListener("submit", async function(e){
+e.preventDefault();
+
+if(!form.checkValidity()){
+alert("Please fill all required fields.");
+return;
+}
+
+submitBtn.innerText="Submitting...";
+submitBtn.disabled=true;
+
+const studentName=document.getElementById("studentName").value.trim();
+const rollNumber=document.getElementById("rollNumber").value.trim();
+const batch=document.getElementById("batch").value;
+const status=statusSelect.value;
+
+let courses=[];
+
+if(status==="completed"){
+const rows=document.querySelectorAll("#completedTable tbody tr");
+
+for(const row of rows){
+const inputs=row.querySelectorAll("input");
+const selects=row.querySelectorAll("select");
+
+let certificateData=null;
+
+if(inputs[3].files[0]){
+const file=inputs[3].files[0];
+const base64=await toBase64(file);
+certificateData={
+filename:file.name,
+data:base64.split(",")[1]
+};
+}
+
+courses.push({
+courseId:inputs[0].value.trim(),
+courseName:inputs[1].value.trim(),
+platform:selects[0].value,
+marks:inputs[2].value.trim(),
+certificate:certificateData
+});
+}
+}
+
+if(status==="current"){
+const rows=document.querySelectorAll("#currentTable tbody tr");
+
+for(const row of rows){
+const inputs=row.querySelectorAll("input");
+const selects=row.querySelectorAll("select");
+
+courses.push({
+courseId:inputs[0].value.trim(),
+courseName:inputs[1].value.trim(),
+platform:selects[0].value
+});
+}
+}
+
+const payload={
+studentName,
+rollNumber,
+batch,
+status,
+courses
+};
+
+try{
+const response=await fetch(BACKEND_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(payload)
+});
+
+const result=await response.json();
+
+if(result.status==="success"){
+alert("Data submitted successfully.");
+form.reset();
+location.reload();
+}else{
+alert("Error: "+result.message);
+}
+
+}catch(err){
+alert("Submission failed.");
+console.error(err);
+}
+
+submitBtn.innerText="Submit Details";
+submitBtn.disabled=false;
+
+});
 </script>
 
 </body>
