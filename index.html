@@ -6,60 +6,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --bg1:#0f2027;
-  --bg2:#203a43;
-  --bg3:#2c5364;
-  --card:#ffffff;
-  --primary:#1565c0;
-}
-
 *{box-sizing:border-box;}
 
 body{
-  margin:0;
   font-family:"Segoe UI",Arial,sans-serif;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  min-height:100vh;
+  margin:0;
   display:flex;
   justify-content:center;
+  align-items:center;
   padding:20px;
-}
-
-.container{
-  width:100%;
-  max-width:700px;
 }
 
 .card{
-  background:var(--card);
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  background:#fff;
+  width:100%;
+  max-width:700px;
+  padding:32px 30px;
+  border-radius:14px;
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+  animation:fadeIn .6s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+h1{
+  text-align:center;
+  color:#203a43;
+  font-size:20px;
+  margin-bottom:6px;
 }
 
 h2{
   text-align:center;
-  margin-bottom:20px;
-  color:#222;
+  color:#555;
+  font-size:14px;
+  margin-bottom:22px;
 }
 
 label{
   font-weight:600;
+  margin-top:14px;
   display:block;
-  margin-top:15px;
 }
 
 input, select{
   width:100%;
-  padding:10px;
-  margin-top:5px;
+  padding:10px 12px;
+  margin-top:6px;
   border-radius:6px;
   border:1px solid #ccc;
   font-size:14px;
 }
 
 small{
-  color:#555;
+  color:#666;
+  font-size:12px;
 }
 
 table{
@@ -70,34 +76,55 @@ table{
 }
 
 th, td{
-  border:1px solid #ccc;
+  border:1px solid #ddd;
   padding:6px;
   text-align:center;
 }
 
 th{
-  background:#f5f5f5;
-}
-
-button{
-  margin-top:15px;
-  padding:10px 15px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
+  background:#f5f7f9;
   font-weight:600;
 }
 
+button{
+  margin-top:18px;
+  width:100%;
+  padding:12px;
+  border:none;
+  font-size:15px;
+  font-weight:600;
+  border-radius:30px;
+  cursor:pointer;
+}
+
 .add-btn{
-  background:#388e3c;
-  color:white;
+  background:linear-gradient(135deg,#388e3c,#2e7d32);
+  color:#fff;
+  margin-top:10px;
 }
 
 .submit-btn{
-  background:var(--primary);
-  color:white;
-  width:100%;
+  background:linear-gradient(135deg,#2c5364,#203a43);
+  color:#fff;
   display:none;
+}
+
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+.footer{
+  margin-top:28px;
+  text-align:center;
+  font-size:13px;
+  color:#5f6f78;
+  font-weight:600;
+}
+
+.footer div{
+  font-size:12px;
+  color:#7a8a93;
 }
 
 .hidden{
@@ -108,10 +135,10 @@ button{
 
 <body>
 
-<div class="container">
 <div class="card">
 
-<h2>MOOCs Certification Details</h2>
+<h1>MOOCs Certification</h1>
+<h2>NBA Data Collection Portal</h2>
 
 <form id="moocForm">
 
@@ -131,7 +158,7 @@ button{
 </select>
 
 <label>Status of MOOCs Certification</label>
-<small>(Courses appeared in SWAYAM/NPTEL, etc. platforms)</small>
+<small>(Courses appeared in SWAYAM/NPTEL platforms)</small>
 <select id="statusSelect" required>
   <option value="">Select Status</option>
   <option value="completed">Completed at least one course</option>
@@ -139,9 +166,7 @@ button{
   <option value="never">Never taken</option>
 </select>
 
-<!-- COMPLETED TABLE -->
 <div id="completedSection" class="hidden">
-
 <table id="completedTable">
 <thead>
 <tr>
@@ -149,7 +174,7 @@ button{
 <th>Course Name</th>
 <th>Platform</th>
 <th>Marks</th>
-<th>Certificate (PDF)</th>
+<th>Certificate</th>
 </tr>
 </thead>
 <tbody>
@@ -169,13 +194,12 @@ button{
 </tbody>
 </table>
 
-<button type="button" class="add-btn" onclick="addCompletedRow()">+ Add More</button>
-
+<button type="button" class="add-btn" onclick="addCompletedRow()">
++ Add More Course
+</button>
 </div>
 
-<!-- CURRENTLY TAKING TABLE -->
 <div id="currentSection" class="hidden">
-
 <table id="currentTable">
 <thead>
 <tr>
@@ -199,195 +223,26 @@ button{
 </tbody>
 </table>
 
-<button type="button" class="add-btn" onclick="addCurrentRow()">+ Add More</button>
-
+<button type="button" class="add-btn" onclick="addCurrentRow()">
++ Add More Course
+</button>
 </div>
 
-<button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+<button type="submit" class="submit-btn" id="submitBtn">
+Submit Details
+</button>
 
 </form>
 
+<div class="footer">
+  Developed by Dr. Rajesh Akula
+  <div>© 2026 · IIEST Shibpur</div>
 </div>
+
 </div>
 
 <script>
-
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbwN4f8yBP1uzufoIwL3CpG4JtVPNDJfkH2SFy0CcH93ugBTldW1rVhyaBqBIZFKdVE/exec";
-
-const form = document.getElementById("moocForm");
-const statusSelect = document.getElementById("statusSelect");
-const completedSection = document.getElementById("completedSection");
-const currentSection = document.getElementById("currentSection");
-const submitBtn = document.getElementById("submitBtn");
-
-statusSelect.addEventListener("change", function(){
-
-completedSection.classList.add("hidden");
-currentSection.classList.add("hidden");
-submitBtn.style.display="none";
-
-if(this.value==="completed"){
-completedSection.classList.remove("hidden");
-submitBtn.style.display="block";
-}
-
-if(this.value==="current"){
-currentSection.classList.remove("hidden");
-submitBtn.style.display="block";
-}
-
-if(this.value==="never"){
-submitBtn.style.display="block";
-}
-
-});
-
-function addCompletedRow(){
-const table = document.getElementById("completedTable").getElementsByTagName('tbody')[0];
-const row = table.insertRow();
-
-row.innerHTML = `
-<td><input type="text"></td>
-<td><input type="text"></td>
-<td>
-<select>
-<option>SWAYAM</option>
-<option>NPTEL</option>
-<option>Other</option>
-</select>
-</td>
-<td><input type="number"></td>
-<td><input type="file" accept="application/pdf"></td>
-`;
-}
-
-function addCurrentRow(){
-const table = document.getElementById("currentTable").getElementsByTagName('tbody')[0];
-const row = table.insertRow();
-
-row.innerHTML = `
-<td><input type="text"></td>
-<td><input type="text"></td>
-<td>
-<select>
-<option>SWAYAM</option>
-<option>NPTEL</option>
-<option>Other</option>
-</select>
-</td>
-`;
-}
-
-/*************************************************
- * SUBMIT HANDLER
- *************************************************/
-
-form.addEventListener("submit", async function(e){
-e.preventDefault();
-
-submitBtn.innerText = "Submitting...";
-submitBtn.disabled = true;
-
-const studentName = form.querySelectorAll("input")[0].value;
-const rollNumber = form.querySelectorAll("input")[1].value;
-const batch = form.querySelector("select").value;
-const status = statusSelect.value;
-
-let courses = [];
-
-if(status === "completed"){
-const rows = document.querySelectorAll("#completedTable tbody tr");
-
-for(const row of rows){
-const inputs = row.querySelectorAll("input");
-const selects = row.querySelectorAll("select");
-
-let certificateData = null;
-
-if(inputs[3].files[0]){
-const file = inputs[3].files[0];
-const base64 = await toBase64(file);
-
-certificateData = {
-filename: file.name,
-data: base64.split(",")[1]
-};
-}
-
-courses.push({
-courseId: inputs[0].value,
-courseName: inputs[1].value,
-platform: selects[0].value,
-marks: inputs[2].value,
-certificate: certificateData
-});
-}
-}
-
-if(status === "current"){
-const rows = document.querySelectorAll("#currentTable tbody tr");
-
-for(const row of rows){
-const inputs = row.querySelectorAll("input");
-const selects = row.querySelectorAll("select");
-
-courses.push({
-courseId: inputs[0].value,
-courseName: inputs[1].value,
-platform: selects[0].value
-});
-}
-}
-
-const payload = {
-studentName,
-rollNumber,
-batch,
-status,
-courses
-};
-
-try{
-const response = await fetch(BACKEND_URL,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify(payload)
-});
-
-const result = await response.json();
-
-if(result.status==="success"){
-alert("Data submitted successfully.");
-form.reset();
-location.reload();
-}else{
-alert("Error: " + result.message);
-}
-
-}catch(err){
-alert("Submission failed.");
-console.error(err);
-}
-
-submitBtn.innerText = "Submit";
-submitBtn.disabled = false;
-
-});
-
-/*************************************************
- * FILE → BASE64
- *************************************************/
-function toBase64(file){
-return new Promise((resolve, reject)=>{
-const reader = new FileReader();
-reader.readAsDataURL(file);
-reader.onload = ()=>resolve(reader.result);
-reader.onerror = error=>reject(error);
-});
-}
-
+/* Keep ALL your existing JS exactly the same below */
 </script>
 
 </body>
