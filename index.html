@@ -237,14 +237,14 @@ Delete
 
 <!-- CURRENT SECTION -->
 <div id="currentSection" class="hidden">
-  <div class="table-wrapper">
+<div class="table-wrapper">
 <table id="currentTable">
 <thead>
 <tr>
 <th>Course ID</th>
 <th>Course Name</th>
 <th>Platform</th>
-  <th>Action</th>
+<th>Delete</th>
 </tr>
 </thead>
 <tbody>
@@ -259,20 +259,15 @@ Delete
 <option>Other</option>
 </select>
 </td>
-<td><input type="number" required></td>
-<td><input type="file" accept="application/pdf"></td>
 <td>
-<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
-Delete
-</button>
+<button type="button" class="delete-btn" onclick="deleteRow(this)">Delete</button>
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<button type="button" class="add-btn" onclick="addCurrentRow()">
-+ Add More Course
-</button>
+
+<button type="button" class="add-btn" onclick="addCurrentRow()">+ Add More Course</button>
 </div>
 
 <button type="submit" class="submit-btn" id="submitBtn">
@@ -377,9 +372,7 @@ row.innerHTML = `
 </select>
 </td>
 <td>
-<button type="button" onclick="deleteRow(this)" style="background:#d32f2f;color:white;padding:6px 10px;border:none;border-radius:6px;cursor:pointer;">
-Delete
-</button>
+<button type="button" class="delete-btn" onclick="deleteRow(this)">Delete</button>
 </td>
 `;
 }
